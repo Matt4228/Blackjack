@@ -1,6 +1,15 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.SwingUtilities;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JButton;
+import javax.swing.JScrollPane;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -8,59 +17,91 @@ public class App {
         Scanner keys = new Scanner(System.in);
         Deck deck = new Deck();
         Person dealer = new Person();
-        ArrayList<Person> players = new ArrayList<Person>();
+        Person player = new Person();
         boolean anyPlaying = true;
 
-        //intitialize players
-        System.out.println("How many players?");
-        int num_players = keys.nextInt();
-        for(int i = 0; i < num_players; i++) {
-            Person player = new Person();
-            players.add(player);
-        }
+        
+        
+        SwingUtilities.invokeLater(() -> {
+            var initialText = "Welcome to Blackjack";
+            var area = new JTextArea(initialText, 8, 50);
 
-        //set up
+            //buttons
+            var playButton = new JButton("Play");
+            var hitButton = new JButton("Hit");
+            var stayButton = new JButton("Stay");
+
+            var buttonPanel = new JPanel();
+            buttonPanel.add(playButton);
+
+            playButton.addActionListener(e -> {
+                area.setText(start(dealer, player, deck));
+                buttonPanel.remove(playButton);
+                buttonPanel.add(hitButton);
+                buttonPanel.add(stayButton);
+                buttonPanel.updateUI();
+            });
+
+            hitButton.addActionListener(e -> {
+                hit(player, deck);
+                area.setText(playerSB(dealer, player));
+            });
+
+            stayButton.addActionListener(e -> {
+                //eval(area, player);
+            });
+            
+            
+            
+
+
+
+
+            var frame = new JFrame("Blackjack");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(new JScrollPane(area), BorderLayout.CENTER);
+            frame.getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+            frame.pack();
+            frame.setVisible(true);
+
+        });
+    }
+
+    public static void eval(Person player) {
+
+    }
+
+    public static void hit(Person player, Deck deck) {
+        player.addToHand(deck.getNextCard());
+    }
+
+    public static String start(Person dealer, Person player, Deck deck) {
+        String result = "";
+
+        player.addToHand(deck.getNextCard());
         dealer.addToHand(deck.getNextCard());
-        players.get(0).addToHand(deck.getNextCard());
+        player.addToHand(deck.getNextCard());
         dealer.addToHand(deck.getNextCard());
-        players.get(0).addToHand(deck.getNextCard());
-        System.out.println("OK lets get started! The dealer is showing a " + dealer.getFaceUp().getCardTitle());
-
-        String disc = keys.nextLine();
-
-        //play loop
-        while(anyPlaying) {
-            printPlayerSB(players.get(0));
-            System.out.println("hit or stay?");
-            String input = keys.nextLine();
-            if(input.equals("stay")) {
-                anyPlaying = false;
-            }
-            else {
-                players.get(0).addToHand(deck.getNextCard());
-            }
-
-
-        }
-
-        //Who won?
 
         
-        
-        
-        
-        
+        result += playerSB(dealer, player);
 
-        keys.close();
+
+        return result;
     }
 
 
-    public static void printPlayerSB(Person player) {
-        System.out.println("You have:");
-            ArrayList<Card>hand = player.getHand();
-            for(Card card : hand) {
-                System.out.println(card.getCardTitle());
-            }
-            System.out.println("Value: " + player.getHandVal());
+    public static String playerSB(Person dealer, Person player) {
+        String result = "";
+
+        result += "The cards have been dealt and the dealer is showing a " + dealer.getFaceUp().getCardTitle();
+        result += "\n\n";
+        result += "You have: ";
+        for(Card card : player.getHand()) {
+            result += "\n" + card.getCardTitle();
+        }
+        result += "\nValue: " + player.getHandVal();
+
+        return result;
     }
 }
