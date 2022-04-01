@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class Deck{
     public int[] indexes = new int[52];
+    private int i = 0;
     
 
     public Deck() {
@@ -22,6 +23,11 @@ public class Deck{
                 shuffled++;
             }
         }
+    }
+
+    public int getNextCard() {
+        i++;
+        return indexes[i-1];
     }
 
     public String toStringInOrder() {

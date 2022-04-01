@@ -4,34 +4,63 @@ import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) throws Exception {
+        //local game variables
+        Scanner keys = new Scanner(System.in);
         Deck deck = new Deck();
         Person dealer = new Person();
-        int num_players = 1;
         ArrayList<Person> players = new ArrayList<Person>();
+        boolean anyPlaying = true;
+
+        //intitialize players
+        System.out.println("How many players?");
+        int num_players = keys.nextInt();
         for(int i = 0; i < num_players; i++) {
             Person player = new Person();
             players.add(player);
         }
 
-        Scanner keys = new Scanner(System.in);
-
-        System.out.println("How many players?");
-        num_players = keys.nextInt();
-        System.out.flush();
-        dealer.addToHand(deck.indexes[0]);
-        players.get(0).addToHand(deck.indexes[1]);
-        dealer.addToHand(deck.indexes[2]);
-        players.get(0).addToHand(deck.indexes[3]);
+        //set up
+        dealer.addToHand(deck.getNextCard());
+        players.get(0).addToHand(deck.getNextCard());
+        dealer.addToHand(deck.getNextCard());
+        players.get(0).addToHand(deck.getNextCard());
         System.out.println("OK lets get started! The dealer is showing a " + dealer.getFaceUp().getCardTitle());
-        System.out.println("You have:");
-        ArrayList<Card>hand = players.get(0).getHand();
-        for(Card card : hand) {
-            System.out.println(card.getCardTitle());
+
+        String disc = keys.nextLine();
+
+        //play loop
+        while(anyPlaying) {
+            printPlayerSB(players.get(0));
+            System.out.println("hit or stay?");
+            String input = keys.nextLine();
+            if(input.equals("stay")) {
+                anyPlaying = false;
+            }
+            else {
+                players.get(0).addToHand(deck.getNextCard());
+            }
+
+
         }
-        System.out.println("hit or stay?");
-        String input = keys.nextLine();
-        
+
+        //Who won?
 
         
+        
+        
+        
+        
+
+        keys.close();
+    }
+
+
+    public static void printPlayerSB(Person player) {
+        System.out.println("You have:");
+            ArrayList<Card>hand = player.getHand();
+            for(Card card : hand) {
+                System.out.println(card.getCardTitle());
+            }
+            System.out.println("Value: " + player.getHandVal());
     }
 }
