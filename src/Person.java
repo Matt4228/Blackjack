@@ -34,6 +34,12 @@ public class Person {
 
         return total;
     }
+
+    public void reset() {
+        for (Card card : hand) {
+            hand.remove(card);
+        }
+    }
 }
 
 

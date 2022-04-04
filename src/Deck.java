@@ -51,4 +51,9 @@ public class Deck{
 
         return str;
     }
+
+    public void reset() {
+        i = 0;
+        shuffle();
+    }
 }
