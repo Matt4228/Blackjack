@@ -27,18 +27,26 @@ public class Person {
 
     public int getHandVal() {
         int total = 0;
+        int num_aces = 0;
 
         for(Card card : hand) {
             total += card.getCardVal();
+            if(card.isAce()) {
+                num_aces++;
+            }
         }
+
+        while(total > 21 && num_aces > 0) {
+            total -= 10;
+            num_aces--;
+        }
+        
 
         return total;
     }
 
     public void reset() {
-        for (Card card : hand) {
-            hand.remove(card);
-        }
+        hand = new ArrayList<Card>();
     }
 }
 
