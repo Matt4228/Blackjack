@@ -1,0 +1,42 @@
+
+        //intitialize players
+        System.out.println("How many players?");
+        int num_players = keys.nextInt();
+        for(int i = 0; i < num_players; i++) {
+            Person player = new Person();
+            players.add(player);
+        }
+
+        //set up
+        dealer.addToHand(deck.getNextCard());
+        players.get(0).addToHand(deck.getNextCard());
+        dealer.addToHand(deck.getNextCard());
+        players.get(0).addToHand(deck.getNextCard());
+        System.out.println("OK lets get started! The dealer is showing a " + dealer.getFaceUp().getCardTitle());
+
+        String disc = keys.nextLine();
+
+        //play loop
+        while(anyPlaying) {
+            printPlayerSB(players.get(0));
+            System.out.println("hit or stay?");
+            String input = keys.nextLine();
+            if(input.equals("stay")) {
+                anyPlaying = false;
+            }
+            else {
+                players.get(0).addToHand(deck.getNextCard());
+            }
+
+
+        }
+
+        //Who won?
+
+        
+        
+        
+        
+        
+
+        keys.close();
